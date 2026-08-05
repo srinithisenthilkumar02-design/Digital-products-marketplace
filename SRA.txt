@@ -1,0 +1,155 @@
+1. Introduction
+1.1 Purpose
+
+The purpose of this Software Requirements Analysis (SRA) is to define the requirements for a Digital Products Marketplace. The system allows sellers to upload and sell digital products such as eBooks, templates, software, music, and graphics, while customers can browse, purchase, and download these products securely.
+
+1.2 Scope
+
+The system provides:
+
+User registration and login
+Product upload and management
+Product search and browsing
+Shopping cart and checkout
+Secure payment
+Digital downloads
+Order history
+Ratings and reviews
+Seller and Admin dashboards
+2. Stakeholders
+Stakeholder	Responsibility
+Customer	Browse, purchase, and download products
+Seller	Upload and manage digital products
+Administrator	Manage users, products, and orders
+Payment Gateway	Process online payments
+3. Functional Requirements
+3.1 User Management
+Register and log in.
+Update profile.
+Reset password.
+Manage user accounts.
+3.2 Product Management
+
+Sellers can:
+
+Upload products.
+Edit product details.
+Delete products.
+Set product price and category.
+3.3 Product Search
+
+Customers can:
+
+Browse products.
+Search by keyword.
+Filter by category and price.
+3.4 Shopping Cart
+
+Customers can:
+
+Add products to the cart.
+Remove products.
+View total price.
+3.5 Payment
+
+The system shall:
+
+Process secure online payments.
+Confirm successful purchases.
+Generate purchase records.
+3.6 Digital Downloads
+
+Customers can:
+
+Download purchased products.
+View download history.
+3.7 Reviews and Ratings
+
+Customers can:
+
+Rate products.
+Write reviews.
+
+Administrators can remove inappropriate reviews.
+
+3.8 Seller Dashboard
+
+Sellers can:
+
+View sales.
+Manage products.
+Track earnings.
+3.9 Admin Dashboard
+
+Administrators can:
+
+Manage users.
+Manage products.
+Monitor orders and payments.
+Generate reports.
+4. Non-Functional Requirements
+Performance
+Fast page loading.
+Quick product search.
+Support multiple users.
+Security
+Secure login.
+Encrypted passwords.
+Secure payment processing.
+Role-based access control.
+Reliability
+Regular data backup.
+High system availability.
+Usability
+Responsive design.
+Easy navigation.
+Mobile-friendly interface.
+5. System Requirements
+Hardware
+Computer or server
+Stable internet connection
+Software
+Frontend: React
+Backend: Node.js
+Database: MongoDB
+Cloud Storage: AWS S3
+Payment Gateway: Stripe or PayPal
+6. Use Cases
+Register User
+Open registration page.
+Enter user details.
+Create account.
+Log in.
+Upload Product
+Seller logs in.
+Uploads product.
+Enters product details.
+Publishes product.
+Purchase Product
+Customer searches for a product.
+Adds it to the cart.
+Makes payment.
+Downloads the product.
+7. Main Database Entities
+User
+Product
+Category
+Order
+Payment
+Review
+Wishlist
+8. Business Rules
+Only registered sellers can upload products.
+Customers must complete payment before downloading.
+Reviews are allowed only for purchased products.
+Only administrators can remove products or users.
+9. Constraints
+Internet connection is required.
+Payment depends on the payment gateway.
+Only supported file types can be uploaded.
+10. Acceptance Criteria
+Users can register and log in successfully.
+Sellers can upload and manage products.
+Customers can search, purchase, and download digital products.
+Payments are processed securely.
+Administrators can manage users, products, and orders.
