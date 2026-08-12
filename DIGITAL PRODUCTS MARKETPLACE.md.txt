@@ -1,0 +1,57 @@
+1. Title
+
+Digital Products Marketplace
+
+2. Domain
+
+ Digital Marketplace
+
+3. Who is the user?
+
+* Admin
+* Seller
+* Customer
+
+4. What problem are we solving?
+
+Creators find it difficult to sell digital products securely. Buyers also need a trusted platform to purchase genuine digital products. This project connects both safely.
+
+5. Proposed Solution
+
+* User login
+* Upload digital products
+* Search products
+* Buy products
+* Secure payment
+* Download after purchase
+* Ratings and reviews
+
+6. Core Entities / Database Tables
+
+* Users
+* Products
+* Categories
+* Orders
+* Payments
+* Reviews
+
+7. User Roles & Permissions
+
+Admin: Manage users, products, and sellers.
+Seller: Upload and manage products.
+Customer: Buy, download, and review products.
+
+8. Success Criteria
+
+Users can register, buy products, make payments, and download products successfully.
+
+9. Out of Scope
+
+* Live chat
+* Mobile app
+* Cryptocurrency payment
+* Subscription plans
+
+10. Chosen Track
+
+Python (Django)
