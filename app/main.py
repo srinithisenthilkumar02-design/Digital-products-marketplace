@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.database import Base, engine
 import app.models
@@ -17,6 +18,7 @@ from app.api import (
 Base.metadata.create_all(bind=engine)
 
 
+# Create FastAPI application
 app = FastAPI(
     title="Digital Products Marketplace",
     description="Marketplace for buying and selling digital products",
@@ -24,7 +26,20 @@ app = FastAPI(
 )
 
 
-# Root API
+# Allow frontend to communicate with backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# Home
 @app.get("/")
 def home():
     return {
@@ -32,47 +47,37 @@ def home():
     }
 
 
-# Authentication API
+# API routes
 app.include_router(
     auth_routes.router,
     prefix="/api/auth",
     tags=["Authentication"]
 )
 
-
-# User API
 app.include_router(
     user_routes.router,
     prefix="/api/users",
     tags=["Users"]
 )
 
-
-# Product API
 app.include_router(
     product_routes.router,
     prefix="/api/products",
     tags=["Products"]
 )
 
-
-# Category API
 app.include_router(
     category_routes.router,
     prefix="/api/categories",
     tags=["Categories"]
 )
 
-
-# Order API
 app.include_router(
     order_routes.router,
     prefix="/api/orders",
     tags=["Orders"]
 )
 
-
-# Payment API
 app.include_router(
     payment_routes.router,
     prefix="/api/payments",

@@ -13,12 +13,12 @@ class Product(Base):
     )
 
     title = Column(
-        String,
+        String(255),
         nullable=False
     )
 
     description = Column(
-        String
+        String(1000)
     )
 
     price = Column(
@@ -27,7 +27,7 @@ class Product(Base):
     )
 
     file_url = Column(
-        String
+        String(500)
     )
 
     seller_id = Column(

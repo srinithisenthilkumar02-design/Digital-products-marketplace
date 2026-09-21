@@ -9,22 +9,21 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     name = Column(
-        String,
+        String(100),
         nullable=False
     )
 
     email = Column(
-        String,
-        unique=True,
+        String(255),
         nullable=False
     )
 
     password = Column(
-        String,
+        String(255),
         nullable=False
     )
 
     role = Column(
-        String,
+        String(50),
         default="buyer"
     )

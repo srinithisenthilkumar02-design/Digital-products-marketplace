@@ -18,7 +18,7 @@ class Payment(Base):
     )
 
     payment_status = Column(
-        String,
+        String(50),
         default="pending"
     )
 

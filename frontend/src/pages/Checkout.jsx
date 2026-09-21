@@ -5,25 +5,80 @@ import Navbar from "../components/Navbar";
 function Checkout() {
   const navigate = useNavigate();
 
-  const cartItems =
-    JSON.parse(localStorage.getItem("cart")) || [];
+  const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
 
-  const [paymentMethod, setPaymentMethod] =
-    useState("card");
+  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [loading, setLoading] = useState(false);
 
   const total = cartItems.reduce(
-    (sum, item) => sum + item.price,
+    (sum, item) => sum + Number(item.price),
     0
   );
 
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
-    alert("Order placed successfully!");
+    setLoading(true);
 
-    localStorage.removeItem("cart");
+    try {
+      for (const item of cartItems) {
+        // Create Order
+        const orderResponse = await fetch(
+          "http://127.0.0.1:8000/api/orders/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              buyer_id: 1,
+              product_id: item.id,
+              total_amount: item.price,
+            }),
+          }
+        );
 
-    navigate("/dashboard");
+        if (!orderResponse.ok) {
+          throw new Error("Order creation failed");
+        }
+
+        const order = await orderResponse.json();
+
+        // Create Payment
+        const paymentResponse = await fetch(
+          "http://127.0.0.1:8000/api/payments/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              order_id: order.id,
+              payment_status: "completed",
+              amount: item.price,
+            }),
+          }
+        );
+
+        if (!paymentResponse.ok) {
+          throw new Error("Payment creation failed");
+        }
+      }
+
+      alert("Payment successful! Order placed successfully.");
+
+      localStorage.removeItem("cart");
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Checkout error:", error);
+
+      alert(
+        "Payment failed. Please make sure the backend is running."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (cartItems.length === 0) {
@@ -38,11 +93,13 @@ function Checkout() {
             <h2>Your cart is empty</h2>
 
             <p>
-              Add a digital product before proceeding
-              to checkout.
+              Add a digital product before proceeding to checkout.
             </p>
 
-            <Link to="/" className="checkout-primary-button">
+            <Link
+              to="/products"
+              className="checkout-primary-button"
+            >
               Explore Products
             </Link>
           </div>
@@ -59,14 +116,15 @@ function Checkout() {
 
         <div className="checkout-heading">
           <span>SECURE CHECKOUT</span>
+
           <h1>Complete Your Purchase</h1>
+
           <p>
             Enter your details and choose your payment method.
           </p>
         </div>
 
         <form onSubmit={handlePlaceOrder}>
-
           <div className="checkout-layout">
 
             {/* Customer Information */}
@@ -117,7 +175,6 @@ function Checkout() {
                   </div>
 
                 </div>
-
               </div>
 
               {/* Payment */}
@@ -129,11 +186,15 @@ function Checkout() {
 
                   <div>
                     <h2>Payment Method</h2>
-                    <p>Choose your preferred payment method</p>
+                    <p>
+                      Choose your preferred payment method
+                    </p>
                   </div>
                 </div>
 
                 <div className="payment-options">
+
+                  {/* Card Payment */}
 
                   <label
                     className={
@@ -154,11 +215,14 @@ function Checkout() {
 
                     <div>
                       <strong>💳 Card Payment</strong>
+
                       <small>
                         Credit or debit card
                       </small>
                     </div>
                   </label>
+
+                  {/* UPI Payment */}
 
                   <label
                     className={
@@ -179,6 +243,7 @@ function Checkout() {
 
                     <div>
                       <strong>📱 UPI</strong>
+
                       <small>
                         Pay using UPI
                       </small>
@@ -186,6 +251,8 @@ function Checkout() {
                   </label>
 
                 </div>
+
+                {/* Card Details */}
 
                 {paymentMethod === "card" && (
                   <div className="payment-fields">
@@ -196,6 +263,7 @@ function Checkout() {
                       <input
                         type="text"
                         placeholder="1234 5678 9012 3456"
+                        required
                       />
                     </div>
 
@@ -205,6 +273,7 @@ function Checkout() {
                       <input
                         type="text"
                         placeholder="MM / YY"
+                        required
                       />
                     </div>
 
@@ -214,11 +283,14 @@ function Checkout() {
                       <input
                         type="password"
                         placeholder="CVV"
+                        required
                       />
                     </div>
 
                   </div>
                 )}
+
+                {/* UPI Details */}
 
                 {paymentMethod === "upi" && (
                   <div className="payment-fields">
@@ -229,6 +301,7 @@ function Checkout() {
                       <input
                         type="text"
                         placeholder="example@upi"
+                        required
                       />
                     </div>
 
@@ -236,7 +309,6 @@ function Checkout() {
                 )}
 
               </div>
-
             </div>
 
             {/* Order Summary */}
@@ -258,10 +330,15 @@ function Checkout() {
 
                     <div>
                       <strong>{item.title}</strong>
-                      <small>{item.category}</small>
+
+                      <small>
+                        Digital Product
+                      </small>
                     </div>
 
-                    <span>₹{item.price}</span>
+                    <span>
+                      ₹{item.price}
+                    </span>
                   </div>
                 ))}
 
@@ -281,14 +358,20 @@ function Checkout() {
 
                 <div className="checkout-grand-total">
                   <span>Total</span>
-                  <strong>₹{total}</strong>
+
+                  <strong>
+                    ₹{total}
+                  </strong>
                 </div>
 
                 <button
                   type="submit"
                   className="place-order-button"
+                  disabled={loading}
                 >
-                  Place Order →
+                  {loading
+                    ? "Processing Payment..."
+                    : "Place Order →"}
                 </button>
 
                 <p className="checkout-security">
@@ -296,11 +379,9 @@ function Checkout() {
                 </p>
 
               </div>
-
             </div>
 
           </div>
-
         </form>
 
       </div>

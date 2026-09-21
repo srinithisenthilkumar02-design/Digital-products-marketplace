@@ -13,7 +13,7 @@ class Category(Base):
     )
 
     name = Column(
-        String,
+        String(100),
         unique=True,
         nullable=False
     )

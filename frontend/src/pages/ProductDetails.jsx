@@ -1,24 +1,43 @@
 import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 function ProductDetails() {
   const { id } = useParams();
 
-  const product = {
-    id: id || 1,
-    title: "Digital Marketing Guide",
-    category: "E-Books",
-    price: 299,
-    rating: 4.8,
-    reviews: 124,
-    icon: "📘",
-    description:
-      "A practical digital marketing guide designed to help beginners understand modern marketing strategies and build a strong online presence.",
-    seller: "Creative Studio",
-  };
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/products/")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Products from backend:", data);
+        console.log("Product ID from URL:", id);
+
+        const foundProduct = data.find(
+          (item) => String(item.id) === String(id)
+        );
+
+        setProduct(foundProduct || null);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Product API error:", error);
+        setLoading(false);
+      });
+  }, [id]);
 
   const addToCart = () => {
+    if (!product) return;
+
     const existingCart =
       JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -28,15 +47,53 @@ function ProductDetails() {
 
     if (!alreadyAdded) {
       existingCart.push(product);
+
       localStorage.setItem(
         "cart",
         JSON.stringify(existingCart)
       );
+
       alert("Product added to cart!");
     } else {
       alert("Product is already in your cart.");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="pro-details-page">
+        <Navbar />
+
+        <main className="pro-details-main">
+          <div className="pro-container">
+            <h2>Loading product...</h2>
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="pro-details-page">
+        <Navbar />
+
+        <main className="pro-details-main">
+          <div className="pro-container">
+            <h2>Product not found.</h2>
+
+            <Link to="/products">
+              ← Back to Products
+            </Link>
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="pro-details-page">
@@ -47,12 +104,26 @@ function ProductDetails() {
 
         <div className="pro-container">
 
+          {/* BREADCRUMB */}
+
           <div className="pro-breadcrumb">
-            <Link to="/">Home</Link>
+
+            <Link to="/">
+              Home
+            </Link>
+
             <span>/</span>
-            <Link to="/products">Products</Link>
+
+            <Link to="/products">
+              Products
+            </Link>
+
             <span>/</span>
-            <strong>{product.title}</strong>
+
+            <strong>
+              {product.title}
+            </strong>
+
           </div>
 
           <div className="pro-details-layout">
@@ -64,11 +135,11 @@ function ProductDetails() {
               <div className="pro-details-image">
 
                 <span className="pro-preview-category">
-                  {product.category}
+                  Digital Product
                 </span>
 
                 <div className="pro-details-icon">
-                  {product.icon}
+                  💻
                 </div>
 
                 <div className="pro-preview-label">
@@ -78,9 +149,19 @@ function ProductDetails() {
               </div>
 
               <div className="pro-preview-info">
-                <span>Instant digital access</span>
-                <span>Secure purchase</span>
-                <span>No physical shipping</span>
+
+                <span>
+                  Instant digital access
+                </span>
+
+                <span>
+                  Secure purchase
+                </span>
+
+                <span>
+                  No physical shipping
+                </span>
+
               </div>
 
             </div>
@@ -90,47 +171,76 @@ function ProductDetails() {
             <div className="pro-details-content">
 
               <div className="pro-details-category">
-                {product.category}
+                Digital Product
               </div>
 
-              <h1>{product.title}</h1>
+              <h1>
+                {product.title}
+              </h1>
 
               <div className="pro-details-rating">
-                <strong>★ {product.rating}</strong>
+
+                <strong>
+                  ★ 4.8
+                </strong>
+
                 <span>
-                  {product.reviews} reviews
+                  Digital product
                 </span>
+
               </div>
 
               <p className="pro-details-description">
                 {product.description}
               </p>
 
+              {/* SELLER */}
+
               <div className="pro-details-seller">
 
                 <div className="pro-seller-avatar">
-                  CS
+                  S
                 </div>
 
                 <div>
-                  <small>Created by</small>
-                  <strong>{product.seller}</strong>
+
+                  <small>
+                    Created by
+                  </small>
+
+                  <strong>
+                    Seller #{product.seller_id}
+                  </strong>
+
                 </div>
 
               </div>
 
               <div className="pro-details-divider" />
 
+              {/* PRICE */}
+
               <div className="pro-details-price">
 
                 <div>
-                  <small>Digital product price</small>
-                  <strong>₹{product.price}</strong>
+
+                  <small>
+                    Digital product price
+                  </small>
+
+                  <strong>
+                    ₹{product.price}
+                  </strong>
+
                 </div>
 
-                <span>One-time purchase</span>
+                <span>
+                  One-time purchase
+                </span>
 
               </div>
+
+              {/* ACTIONS */}
 
               <div className="pro-details-actions">
 
@@ -165,31 +275,43 @@ function ProductDetails() {
 
             <div className="pro-description-card">
 
-              <span>PRODUCT INFORMATION</span>
+              <span>
+                PRODUCT INFORMATION
+              </span>
 
               <h2>
                 About this product
               </h2>
 
               <p>
-                This digital product provides practical,
-                easy-to-understand information that can be
-                accessed immediately after purchase.
-                It is designed for learners, creators and
-                professionals looking for useful digital
-                resources.
+                {product.description}
               </p>
 
             </div>
 
+            {/* FEATURES */}
+
             <div className="pro-features-card">
 
-              <h3>What's included?</h3>
+              <h3>
+                What's included?
+              </h3>
 
-              <div>✓ Digital product access</div>
-              <div>✓ Instant download</div>
-              <div>✓ Lifetime access</div>
-              <div>✓ Secure purchase</div>
+              <div>
+                ✓ Digital product access
+              </div>
+
+              <div>
+                ✓ Instant download
+              </div>
+
+              <div>
+                ✓ Lifetime access
+              </div>
+
+              <div>
+                ✓ Secure purchase
+              </div>
 
             </div>
 
