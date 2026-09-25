@@ -6,9 +6,16 @@ from app.core.config import settings
 
 DATABASE_URL = settings.DATABASE_URL
 
-engine = create_engine(
-    DATABASE_URL
-)
+# Use PyMySQL for MySQL connections
+if DATABASE_URL.startswith("mysql://"):
+    DATABASE_URL = DATABASE_URL.replace(
+        "mysql://",
+        "mysql+pymysql://",
+        1
+    )
+
+
+engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(
     autocommit=False,
