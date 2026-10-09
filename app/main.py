@@ -14,10 +14,8 @@ from app.api import (
     payment_routes
 )
 
-
 # Create database tables
 Base.metadata.create_all(bind=engine)
-
 
 # Create FastAPI application
 app = FastAPI(
@@ -25,7 +23,6 @@ app = FastAPI(
     description="Marketplace for buying and selling digital products",
     version="1.0.0"
 )
-
 
 # Allow frontend to communicate with backend
 app.add_middleware(
@@ -40,14 +37,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 # Home
 @app.get("/")
 def home():
     return {
         "message": "Digital Products Marketplace API Running"
     }
-
 
 # API routes
 app.include_router(
