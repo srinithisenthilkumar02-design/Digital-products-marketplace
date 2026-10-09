@@ -5,12 +5,15 @@ import Footer from "../components/Footer";
 
 function ProductDetails() {
   const { id } = useParams();
+  const API_URL = import.meta.env.VITE_API_URL;
+  console.log("API URL:", API_URL);
+  console.log("Product ID:", id); 
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/products/")
+    fetch(`${API_URL}/api/products/`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch products");
@@ -104,8 +107,6 @@ function ProductDetails() {
 
         <div className="pro-container">
 
-          {/* BREADCRUMB */}
-
           <div className="pro-breadcrumb">
 
             <Link to="/">
@@ -127,8 +128,6 @@ function ProductDetails() {
           </div>
 
           <div className="pro-details-layout">
-
-            {/* PRODUCT PREVIEW */}
 
             <div className="pro-details-preview">
 
@@ -166,8 +165,6 @@ function ProductDetails() {
 
             </div>
 
-            {/* PRODUCT INFORMATION */}
-
             <div className="pro-details-content">
 
               <div className="pro-details-category">
@@ -194,8 +191,6 @@ function ProductDetails() {
                 {product.description}
               </p>
 
-              {/* SELLER */}
-
               <div className="pro-details-seller">
 
                 <div className="pro-seller-avatar">
@@ -218,8 +213,6 @@ function ProductDetails() {
 
               <div className="pro-details-divider" />
 
-              {/* PRICE */}
-
               <div className="pro-details-price">
 
                 <div>
@@ -239,8 +232,6 @@ function ProductDetails() {
                 </span>
 
               </div>
-
-              {/* ACTIONS */}
 
               <div className="pro-details-actions">
 
@@ -269,8 +260,6 @@ function ProductDetails() {
 
           </div>
 
-          {/* DESCRIPTION */}
-
           <section className="pro-details-bottom">
 
             <div className="pro-description-card">
@@ -288,8 +277,6 @@ function ProductDetails() {
               </p>
 
             </div>
-
-            {/* FEATURES */}
 
             <div className="pro-features-card">
 
